@@ -46,7 +46,7 @@ jobs:
           #SOLUTION_FILE_PATH: src/QA.Bifrost.sln
 
           # URL to the NuGet server. (Default: https://api.nuget.org)
-          NUGET_SOURCE: ${{ env.NUGET_SOURCE }}
+          #NUGET_SOURCE: ${{ env.NUGET_SOURCE }}
 
           # Add symbols to NuGet package. (Default: false)
           INCLUDE_SYMBOLS: true
