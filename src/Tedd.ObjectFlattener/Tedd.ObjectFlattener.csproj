@@ -5,9 +5,27 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
-    <Configurations>Debug;Release</Configurations>
+    <Configurations>Debug;Release</Configurations>    
+  
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>Serialize/deserialize complex objects to/from Dictionary&lt;string, string&gt;. Flattens hierarcy, perfect for serializing to Key-Value database table.</Description>
+    <PackageTags>flatten,keyvalue,serialize,deserialize</PackageTags>
+    <PackageProjectUrl>https://github.com/tedd/Tedd.ObjectFlattener</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/tedd/Tedd.ObjectFlattener.git</RepositoryUrl>
     <Title>$(AssemblyName)</Title>
-    <Version>1.0.0-preview1</Version>
+    <Version>1.0.0-preview2</Version>
+    <Authors>tedd</Authors>
+    <Copyright>Tedd Hansen</Copyright>
+    <Company>Tedd Hansen</Company>
+    <Copyright>Tedd Hansen</Copyright>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
+    <AnalysisLevel>latest-all</AnalysisLevel>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$Configuration' == 'Release'">
@@ -17,6 +35,17 @@
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
   </PropertyGroup>
 
+  <ItemGroup>
+		<None Include="..\..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+		<None Include="..\..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+  
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
