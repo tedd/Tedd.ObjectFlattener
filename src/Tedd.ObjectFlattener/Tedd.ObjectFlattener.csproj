@@ -2,9 +2,19 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
+    <Configurations>Debug;Release</Configurations>
+    <Title>$(AssemblyName)</Title>
+    <Version>1.0.0-preview1</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$Configuration' == 'Release'">
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$Configuration' != 'Release'">
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
