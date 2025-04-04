@@ -17,11 +17,11 @@ namespace Tedd;
 /// </remarks>
 public static class ObjectFlattener
 {
-    internal const char Separator = '|';
+    public static char Separator = ':';
 
     /// <summary>
     /// Serializes an object to JSON (respecting provided System.Text.Json options, e.g., for enum conversion)
-    /// and then flattens its structure into a dictionary using the '|' separator.
+    /// and then flattens its structure into a dictionary using the ':' separator.
     /// </summary>
     public static Dictionary<string, string> Flatten<T>(T obj, JsonSerializerOptions? options = null)
     {
@@ -79,7 +79,7 @@ public static class ObjectFlattener
     }
 
     /// <summary>
-    /// Unflattens a dictionary (with pipe-separated keys '|') back into a target object structure of type T.
+    /// Unflattens a dictionary (with pipe-separated keys ':') back into a target object structure of type T.
     /// Builds an intermediate JSON structure using Newtonsoft.Json.Linq.
     /// Uses **Newtonsoft.Json** for the final deserialization step.
     /// </summary>

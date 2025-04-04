@@ -90,29 +90,29 @@ Console.WriteLine("Are equal: " + areEqual);
 ```
 Status -> 1
 String -> Hello world
-List|0 -> First
-List|1 -> Second
-SubLevel1_1|SubLevel2_1|Dict|First -> 1
-SubLevel1_1|SubLevel2_1|Dict|Second -> 2
-SubLevel1_1|SubLevel2_1|Dict|Third -> 3
-SubLevel1_1|SubLevel2_1|List|0 -> 0
-SubLevel1_1|SubLevel2_2|Dict|Five -> 5
-SubLevel1_1|SubLevel2_2|Dict|Four -> 4
-SubLevel1_1|SubLevel2_2|List|0 -> 0
-SubLevel1_1|SubLevel2_2|List|1 -> 2
-SubLevel1_2|SubLevel2_1|Dict -> 
-SubLevel1_2|SubLevel2_1|List -> 
-SubLevel1_2|SubLevel2_2|Dict|A -> 10
-SubLevel1_2|SubLevel2_2|Dict|B -> 20
-SubLevel1_2|SubLevel2_2|List|0 -> 3
-SubLevel1_3|SubLevel2_1|Dict|First -> 1
-SubLevel1_3|SubLevel2_1|Dict|Second -> 2
-SubLevel1_3|SubLevel2_1|Dict|Third -> 3
-SubLevel1_3|SubLevel2_1|List|0 -> 0
-SubLevel1_3|SubLevel2_2|Dict|Five -> 5
-SubLevel1_3|SubLevel2_2|Dict|Four -> 4
-SubLevel1_3|SubLevel2_2|List|0 -> 0
-SubLevel1_3|SubLevel2_2|List|1 -> 2
+List:0 -> First
+List:1 -> Second
+SubLevel1_1:SubLevel2_1:Dict:First -> 1
+SubLevel1_1:SubLevel2_1:Dict:Second -> 2
+SubLevel1_1:SubLevel2_1:Dict:Third -> 3
+SubLevel1_1:SubLevel2_1:List:0 -> 0
+SubLevel1_1:SubLevel2_2:Dict:Five -> 5
+SubLevel1_1:SubLevel2_2:Dict:Four -> 4
+SubLevel1_1:SubLevel2_2:List:0 -> 0
+SubLevel1_1:SubLevel2_2:List:1 -> 2
+SubLevel1_2:SubLevel2_1:Dict -> 
+SubLevel1_2:SubLevel2_1:List -> 
+SubLevel1_2:SubLevel2_2:Dict:A -> 10
+SubLevel1_2:SubLevel2_2:Dict:B -> 20
+SubLevel1_2:SubLevel2_2:List:0 -> 3
+SubLevel1_3:SubLevel2_1:Dict:First -> 1
+SubLevel1_3:SubLevel2_1:Dict:Second -> 2
+SubLevel1_3:SubLevel2_1:Dict:Third -> 3
+SubLevel1_3:SubLevel2_1:List:0 -> 0
+SubLevel1_3:SubLevel2_2:Dict:Five -> 5
+SubLevel1_3:SubLevel2_2:Dict:Four -> 4
+SubLevel1_3:SubLevel2_2:List:0 -> 0
+SubLevel1_3:SubLevel2_2:List:1 -> 2
 
 Are equal: True
 ```

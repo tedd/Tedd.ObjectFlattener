@@ -13,7 +13,7 @@
     <PackageProjectUrl>https://github.com/tedd/Tedd.ObjectFlattener</PackageProjectUrl>
     <RepositoryUrl>https://github.com/tedd/Tedd.ObjectFlattener.git</RepositoryUrl>
     <Title>$(AssemblyName)</Title>
-    <Version>1.0.0-preview2</Version>
+    <Version>1.0.0-preview3</Version>
     <Authors>tedd</Authors>
     <Copyright>Tedd Hansen</Copyright>
     <Company>Tedd Hansen</Company>
