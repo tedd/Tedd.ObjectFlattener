@@ -1,9 +1,9 @@
 import sys
 
-with open('src/Tedd.ObjectFlattener/ObjectFlattener.cs', 'r') as f:
+with open('.github/workflows/publish-nugets.yml', 'r') as f:
     content = f.read()
 
-content = content.replace('JToken nextNode = currentObj[currentPart];', 'JToken? nextNode = currentObj[currentPart];')
+content = content.replace("jobs:", "env:\n  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true\n\njobs:")
 
-with open('src/Tedd.ObjectFlattener/ObjectFlattener.cs', 'w') as f:
+with open('.github/workflows/publish-nugets.yml', 'w') as f:
     f.write(content)
