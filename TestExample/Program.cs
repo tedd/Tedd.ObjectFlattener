@@ -8,7 +8,7 @@ public enum TestStatus { Pending, InProgress, Completed, Failed }
 public record Root
 {
 	public TestStatus Status { get; set; }
-	public string @String { get; set; }
+	public string @String { get; set; } = string.Empty;
 	public List<string> List { get; set; } = new();
 	public SubLevel1 SubLevel1_1 { get; set; } = new();
 	public SubLevel1 SubLevel1_2 { get; set; } = new();
