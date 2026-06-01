@@ -95,7 +95,7 @@ public static class ObjectFlattener
             {
                 var value = flattenedDict[key]; if (string.IsNullOrEmpty(key)) continue;
 
-               var parts = key.Split(Separator);
+                var parts = key.Split(Separator);
 
                 root ??= new JObject(); // Assume object root
                 var currentNode = root;
@@ -169,7 +169,7 @@ public static class ObjectFlattener
 
     /// <summary> Parses the string value into an appropriate JToken primitive. </summary>
     private static JToken ParseValueString(string stringValue)
-    { 
+    {
         if (stringValue == null) { return JValue.CreateNull(); }
         if (bool.TryParse(stringValue, out bool boolVal)) { return new JValue(boolVal); }
         if (long.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out long longVal)) { return new JValue(longVal); }
@@ -184,7 +184,7 @@ public static class ObjectFlattener
     /// <summary> Custom comparer for sorting flattened keys correctly.</summary>
     internal class PathComparer : IComparer<string>
     {
-        public int Compare(string x, string y)
+        public int Compare(string? x, string? y)
         {
             if (x == null && y == null) return 0; if (x == null) return -1; if (y == null) return 1;
             // *** Use updated Separator ***
