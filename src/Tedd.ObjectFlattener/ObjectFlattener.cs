@@ -17,7 +17,9 @@ namespace Tedd;
 /// </remarks>
 public static class ObjectFlattener
 {
+#pragma warning disable CA2211 // Non-constant fields should not be visible
     public static char Separator = ':';
+#pragma warning restore CA2211 // Non-constant fields should not be visible
 
     /// <summary>
     /// Serializes an object to JSON (respecting provided System.Text.Json options, e.g., for enum conversion)
@@ -41,7 +43,7 @@ public static class ObjectFlattener
         {
             throw new InvalidOperationException("Unexpected error during Flatten's recursive element processing.", ex);
         }
-        return flattenedDict;
+        return flattenedDict!;
     }
 
     /// <summary>
@@ -71,7 +73,7 @@ public static class ObjectFlattener
             }
         }
         else if (element.ValueKind == JsonValueKind.String)
-            flattenedDict[currentPath] = element.GetString();
+            flattenedDict[currentPath] = element.GetString() ?? string.Empty;
         else if (element.ValueKind is JsonValueKind.Number or JsonValueKind.True or JsonValueKind.False)
             flattenedDict[currentPath] = element.GetRawText();
         else if (element.ValueKind == JsonValueKind.Null)
@@ -93,7 +95,7 @@ public static class ObjectFlattener
             var orderedKeys = flattenedDict.Keys.OrderBy(k => k, new PathComparer());
             foreach (var key in orderedKeys)
             {
-                var value = flattenedDict[key]; if (string.IsNullOrEmpty(key)) continue;
+                string value = flattenedDict[key]; if (string.IsNullOrEmpty(key)) continue;
 
                 var parts = key.Split(Separator);
 
@@ -105,7 +107,7 @@ public static class ObjectFlattener
                     var currentPart = parts[i]; var nextPart = parts[i + 1];
                     if (currentNode is JObject currentObj)
                     {
-                        JToken nextNode = currentObj[currentPart];
+                        JToken? nextNode = currentObj[currentPart];
                         if (nextNode == null || nextNode.Type == JTokenType.Null)
                         {
                             nextNode = (nextPart == "0") ? (JToken)new JArray() : new JObject();
@@ -141,7 +143,7 @@ public static class ObjectFlattener
                 else { throw new InvalidOperationException($"Cannot set final value for key '{key}'. Container is {currentNode?.Type}."); }
             } // --- End foreach key loop ---
 
-            if (root == null) { return default(T); }
+            if (root == null) { return default(T)!; }
 
             string jsonString = root.ToString(Newtonsoft.Json.Formatting.None); // Intermediate JSON
 
@@ -152,11 +154,11 @@ public static class ObjectFlattener
                 {
                     Converters = { new Newtonsoft.Json.Converters.StringEnumConverter() },
                 };
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(jsonString, newtonsoftSettings);
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(jsonString, newtonsoftSettings)!;
             }
             catch (Newtonsoft.Json.JsonException newtonsoftEx)
             {
-                string intermediateJsonPreview = root?.ToString(Newtonsoft.Json.Formatting.Indented) ?? "[Structure was null]";
+                string intermediateJsonPreview = root.ToString(Newtonsoft.Json.Formatting.Indented) ?? "[Structure was null]";
                 string targetTypeName = typeof(T).Name;
                 throw new InvalidOperationException($"Newtonsoft.Json failed to deserialize intermediate JSON to '{targetTypeName}'. Intermediate JSON:\n---\n{intermediateJsonPreview}\n---", newtonsoftEx);
             } // --- END NEWTONSOFT DESERIALIZATION ---
@@ -168,7 +170,7 @@ public static class ObjectFlattener
     }
 
     /// <summary> Parses the string value into an appropriate JToken primitive. </summary>
-    private static JToken ParseValueString(string stringValue)
+    private static JValue ParseValueString(string stringValue)
     {
         if (stringValue == null) { return JValue.CreateNull(); }
         if (bool.TryParse(stringValue, out bool boolVal)) { return new JValue(boolVal); }
@@ -182,7 +184,7 @@ public static class ObjectFlattener
     private static void EnsureJArraySlot(JArray array, int index) { while (array.Count <= index) { array.Add(JValue.CreateNull()); } }
 
     /// <summary> Custom comparer for sorting flattened keys correctly.</summary>
-    internal class PathComparer : IComparer<string>
+    internal sealed class PathComparer : IComparer<string>
     {
         public int Compare(string? x, string? y)
         {
