@@ -41,7 +41,7 @@ public static class ObjectFlattener
         {
             throw new InvalidOperationException("Unexpected error during Flatten's recursive element processing.", ex);
         }
-        return flattenedDict;
+        return flattenedDict!;
     }
 
     /// <summary>
@@ -71,7 +71,7 @@ public static class ObjectFlattener
             }
         }
         else if (element.ValueKind == JsonValueKind.String)
-            flattenedDict[currentPath] = element.GetString();
+            flattenedDict[currentPath] = element.GetString() ?? string.Empty;
         else if (element.ValueKind is JsonValueKind.Number or JsonValueKind.True or JsonValueKind.False)
             flattenedDict[currentPath] = element.GetRawText();
         else if (element.ValueKind == JsonValueKind.Null)
@@ -94,9 +94,9 @@ bool rootCreated = false;
             var orderedKeys = flattenedDict.Keys.OrderBy(k => k, new PathComparer());
             foreach (var key in orderedKeys)
             {
-                var value = flattenedDict[key]; if (string.IsNullOrEmpty(key)) continue;
+                string value = flattenedDict[key]; if (string.IsNullOrEmpty(key)) continue;
 
-               var parts = key.Split(Separator);
+                var parts = key.Split(Separator);
 
                 rootCreated = true;
                 var currentNode = root;
@@ -153,7 +153,7 @@ bool rootCreated = false;
                 {
                     Converters = { new Newtonsoft.Json.Converters.StringEnumConverter() },
                 };
-                return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(jsonString, newtonsoftSettings);
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(jsonString, newtonsoftSettings)!;
             }
             catch (Newtonsoft.Json.JsonException newtonsoftEx)
             {

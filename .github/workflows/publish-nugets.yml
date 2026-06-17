@@ -31,7 +31,7 @@ jobs:
       - name: Publish NuGet Packages
         if: github.event_name == 'push'
         id: publish_nuget
-        uses: tedd/publish-nuget-neo@main
+        uses: tedd/publish-nuget-neo@v1.0.2
         with:
           # NuGet API key to authenticate on the NuGet server.
           # Use GitHub secrets to pass your API key, e.g. ${{secrets.NUGET_API_KEY}}.
