@@ -17,15 +17,13 @@ namespace Tedd;
 /// </remarks>
 public static class ObjectFlattener
 {
-#pragma warning disable CA2211 // Non-constant fields should not be visible
-    public static char Separator = ':';
-#pragma warning restore CA2211 // Non-constant fields should not be visible
+    public static char Separator { get; set; } = ':';
 
     /// <summary>
     /// Serializes an object to JSON (respecting provided System.Text.Json options, e.g., for enum conversion)
     /// and then flattens its structure into a dictionary using the ':' separator.
     /// </summary>
-    public static Dictionary<string, string> Flatten<T>(T obj, JsonSerializerOptions? options = null)
+    public static Dictionary<string, string?> Flatten<T>(T obj, JsonSerializerOptions? options = null)
     {
         ArgumentNullException.ThrowIfNull(obj);
         var flattenedDict = new Dictionary<string, string?>();
@@ -85,11 +83,12 @@ public static class ObjectFlattener
     /// Builds an intermediate JSON structure using Newtonsoft.Json.Linq.
     /// Uses **Newtonsoft.Json** for the final deserialization step.
     /// </summary>
-    public static T Unflatten<T>(Dictionary<string, string> flattenedDict, JsonSerializerOptions? options = null) where T : class
+    public static T? Unflatten<T>(Dictionary<string, string?> flattenedDict, JsonSerializerOptions? options = null) where T : class
     {
         ArgumentNullException.ThrowIfNull(flattenedDict);
 
-        JToken? root = null;
+        JToken root = new JObject();
+bool rootCreated = false;
         try
         {
             var orderedKeys = flattenedDict.Keys.OrderBy(k => k, new PathComparer());
@@ -99,7 +98,7 @@ public static class ObjectFlattener
 
                 var parts = key.Split(Separator);
 
-                root ??= new JObject(); // Assume object root
+                rootCreated = true;
                 var currentNode = root;
 
                 for (int i = 0; i < parts.Length - 1; i++)
@@ -143,7 +142,7 @@ public static class ObjectFlattener
                 else { throw new InvalidOperationException($"Cannot set final value for key '{key}'. Container is {currentNode?.Type}."); }
             } // --- End foreach key loop ---
 
-            if (root == null) { return default(T)!; }
+            if (!rootCreated) { return default(T); }
 
             string jsonString = root.ToString(Newtonsoft.Json.Formatting.None); // Intermediate JSON
 
@@ -158,7 +157,7 @@ public static class ObjectFlattener
             }
             catch (Newtonsoft.Json.JsonException newtonsoftEx)
             {
-                string intermediateJsonPreview = root.ToString(Newtonsoft.Json.Formatting.Indented) ?? "[Structure was null]";
+                string intermediateJsonPreview = root.ToString(Newtonsoft.Json.Formatting.Indented);
                 string targetTypeName = typeof(T).Name;
                 throw new InvalidOperationException($"Newtonsoft.Json failed to deserialize intermediate JSON to '{targetTypeName}'. Intermediate JSON:\n---\n{intermediateJsonPreview}\n---", newtonsoftEx);
             } // --- END NEWTONSOFT DESERIALIZATION ---
@@ -170,8 +169,8 @@ public static class ObjectFlattener
     }
 
     /// <summary> Parses the string value into an appropriate JToken primitive. </summary>
-    private static JValue ParseValueString(string stringValue)
-    {
+    private static JValue ParseValueString(string? stringValue)
+    { 
         if (stringValue == null) { return JValue.CreateNull(); }
         if (bool.TryParse(stringValue, out bool boolVal)) { return new JValue(boolVal); }
         if (long.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out long longVal)) { return new JValue(longVal); }
