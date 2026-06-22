@@ -8,3 +8,6 @@
 1.  Update the `README.md` to accurately reflect the hybrid JSON serializer usage (`System.Text.Json` and `Newtonsoft.Json`).
 2.  Correct the code example output to strictly match deterministic execution results.
 3.  Add an explicit section articulating the actual architectural flow and separating implemented facts from hypothetical roadmap features (like data binding and routed events).
+## 2026-06-21 - C# 9.0/10.0+ Nullable Reference Type Documentation Drift
+**Observation:** The codebase's public documentation (`README.md`) presented obsolete code structures lacking proper nullable reference annotations (`?`) and default assignments (`string.Empty`). This generated compiler warnings (`CS8618`, `CS8625`) under .NET 9.0/10.0+ utilizing strict nullable references mode.
+**Strategic Action:** The README code blocks have been synchronized to adhere strictly to nullable reference constraints to avoid pedagogical friction. Nullability has been integrated accurately in structural declarations to enforce complete epistemological parity with modern compilation standards.

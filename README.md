@@ -33,7 +33,7 @@ public enum TestStatus { Pending, InProgress, Completed, Failed }
 public record Root
 {
 	public TestStatus Status { get; set; }
-	public string @String { get; set; }
+	public string @String { get; set; } = string.Empty;
 	public List<string> List { get; set; } = new();
 	public SubLevel1 SubLevel1_1 { get; set; } = new();
 	public SubLevel1 SubLevel1_2 { get; set; } = new();
@@ -46,8 +46,8 @@ public record SubLevel1
 public record SubLevel2
 {
     // For easy comparison we need to preserve order, so using SortedDictionary
-	public SortedDictionary<string, int> Dict { get; set; } = new();
-	public List<TestStatus> List { get; set; } = new();
+	public SortedDictionary<string, int>? Dict { get; set; } = new();
+	public List<TestStatus>? List { get; set; } = new();
 }
 
 // Set up and populate test object
