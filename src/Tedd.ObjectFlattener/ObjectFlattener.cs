@@ -94,7 +94,7 @@ bool rootCreated = false;
             var orderedKeys = flattenedDict.Keys.OrderBy(k => k, new PathComparer());
             foreach (var key in orderedKeys)
             {
-                string value = flattenedDict[key]; if (string.IsNullOrEmpty(key)) continue;
+                string? value = flattenedDict[key]; if (string.IsNullOrEmpty(key)) continue;
 
                 var parts = key.Split(Separator);
 
@@ -183,7 +183,7 @@ bool rootCreated = false;
     private static void EnsureJArraySlot(JArray array, int index) { while (array.Count <= index) { array.Add(JValue.CreateNull()); } }
 
     /// <summary> Custom comparer for sorting flattened keys correctly.</summary>
-    internal sealed class PathComparer : IComparer<string>
+    internal sealed class PathComparer : IComparer<string?>
     {
         public int Compare(string? x, string? y)
         {
