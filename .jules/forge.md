@@ -1,5 +1,5 @@
-## 2026-06-01 - Dependency and Warning Modernization
+## 2026-10-01 - Dependency and Warning Modernization (Completed)
 
-**Observation:** Tedd.ObjectFlattener is targeting `net9.0` and references `Newtonsoft.Json` 13.0.3, which is outdated. The project file also contains duplicated elements `Copyright`, `LangVersion`, and `Nullable`. Additionally, `ObjectFlattener.cs` contains a nullability mismatch warning (CS8767) for the `Compare` method in `PathComparer` when compared to `IComparer<string>`.
+**Observation:** Tedd.ObjectFlattener had an outdated dependency on `Newtonsoft.Json` (13.0.3), some redundant project properties, and nullability mismatch warnings (CS8600, CS8767) in `ObjectFlattener.cs`.
 
-**Strategic Action:** Update `Newtonsoft.Json` to `13.0.4`. Remove duplicate properties from `Tedd.ObjectFlattener.csproj` to clean up the package metadata and project definition. Fix the `CS8767` warning in `ObjectFlattener.cs` by ensuring `PathComparer.Compare` handles `string?` arguments correctly. Ensure successful compilation, testing, and pack step generation after modifications without creating new build warnings.
+**Strategic Action:** Updated `Newtonsoft.Json` to 13.0.4. Removed duplicate `LangVersion` property from `Tedd.ObjectFlattener.csproj`. Retained `Copyright` to maintain metadata correctness, and retained `Nullable` because removing it produced CS8632 warnings across `ObjectFlattener.cs`. Fixed the `CS8600` warning by annotating the value type `string?`. Fixed the `CS8767` warning by ensuring `PathComparer` implements `IComparer<string?>` correctly.
