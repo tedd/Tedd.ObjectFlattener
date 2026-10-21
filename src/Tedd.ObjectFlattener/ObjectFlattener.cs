@@ -88,7 +88,7 @@ public static class ObjectFlattener
         ArgumentNullException.ThrowIfNull(flattenedDict);
 
         JToken root = new JObject();
-bool rootCreated = false;
+        bool rootCreated = false;
         try
         {
             var orderedKeys = flattenedDict.Keys.OrderBy(k => k, new PathComparer());
@@ -170,7 +170,7 @@ bool rootCreated = false;
 
     /// <summary> Parses the string value into an appropriate JToken primitive. </summary>
     private static JValue ParseValueString(string? stringValue)
-    { 
+    {
         if (stringValue == null) { return JValue.CreateNull(); }
         if (bool.TryParse(stringValue, out bool boolVal)) { return new JValue(boolVal); }
         if (long.TryParse(stringValue, NumberStyles.Any, CultureInfo.InvariantCulture, out long longVal)) { return new JValue(longVal); }
@@ -182,24 +182,53 @@ bool rootCreated = false;
     /// <summary> Ensures a JArray has elements up to the specified index. </summary>
     private static void EnsureJArraySlot(JArray array, int index) { while (array.Count <= index) { array.Add(JValue.CreateNull()); } }
 
+    ///
     /// <summary> Custom comparer for sorting flattened keys correctly.</summary>
+    /// <remarks>
+    /// Optimization Hypothesis: Avoid array allocations from string.Split.
+    /// Time Complexity: O(N) where N is the length of the shortest string.
+    /// Space Complexity: O(1) memory allocation.
+    /// </remarks>
     internal sealed class PathComparer : IComparer<string>
     {
         public int Compare(string? x, string? y)
         {
-            if (x == null && y == null) return 0; if (x == null) return -1; if (y == null) return 1;
-            // *** Use updated Separator ***
-            var partsX = x.Split(ObjectFlattener.Separator);
-            var partsY = y.Split(ObjectFlattener.Separator);
-            int len = Math.Min(partsX.Length, partsY.Length);
-            for (int i = 0; i < len; i++)
+            if (ReferenceEquals(x, y)) return 0;
+            if (x == null) return -1;
+            if (y == null) return 1;
+
+            ReadOnlySpan<char> spanX = x.AsSpan();
+            ReadOnlySpan<char> spanY = y.AsSpan();
+
+            while (!spanX.IsEmpty && !spanY.IsEmpty)
             {
-                bool isNumX = int.TryParse(partsX[i], out int numX);
-                bool isNumY = int.TryParse(partsY[i], out int numY);
-                if (isNumX && isNumY) { if (numX != numY) return numX.CompareTo(numY); }
-                else { int stringCompare = String.Compare(partsX[i], partsY[i], StringComparison.Ordinal); if (stringCompare != 0) return stringCompare; }
+                int sepX = spanX.IndexOf(ObjectFlattener.Separator);
+                int sepY = spanY.IndexOf(ObjectFlattener.Separator);
+
+                ReadOnlySpan<char> partX = sepX == -1 ? spanX : spanX.Slice(0, sepX);
+                ReadOnlySpan<char> partY = sepY == -1 ? spanY : spanY.Slice(0, sepY);
+
+                bool isNumX = int.TryParse(partX, out int numX);
+                bool isNumY = int.TryParse(partY, out int numY);
+
+                if (isNumX && isNumY)
+                {
+                    if (numX != numY) return numX.CompareTo(numY);
+                }
+                else
+                {
+                    int stringCompare = partX.CompareTo(partY, StringComparison.Ordinal);
+                    if (stringCompare != 0) return stringCompare;
+                }
+
+                spanX = sepX == -1 ? ReadOnlySpan<char>.Empty : spanX.Slice(sepX + 1);
+                spanY = sepY == -1 ? ReadOnlySpan<char>.Empty : spanY.Slice(sepY + 1);
             }
-            return partsX.Length.CompareTo(partsY.Length);
+
+            if (!spanX.IsEmpty) return 1;
+            if (!spanY.IsEmpty) return -1;
+
+            return 0;
         }
     }
 }
